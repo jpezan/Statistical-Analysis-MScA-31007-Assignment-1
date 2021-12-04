@@ -1,0 +1,62 @@
+---
+title: "Assignment 1"
+author: Jacqueline Pezan
+output: html_notebook
+date: 10-04-2021
+---
+```{r}
+dataPath <- "~/UChicago/31007_Stats_Lec/"
+df <- read.table(paste0(dataPath, 'Week1_Test_Sample.csv'), header=TRUE)
+
+# Joint Distribution
+
+nrow_df = length(unique(df$u))
+count_dist = matrix(table(df), nrow=nrow_df)
+row_count = nrow(df)
+#length(data$u)
+joint_distribution = (count_dist)/row_count
+joint_distribution
+# Check that elements add to 1
+sum(joint_distribution)
+
+# Marginal Distribution
+# for each row, add up every value to get u_marginal
+u_Marginal<-rowSums(joint_distribution)
+u_Marginal
+
+v_Marginal<-colSums(joint_distribution)
+v_Marginal
+
+# Conditional Distribution 
+
+u_Conditional_v = joint_distribution[ ,4] / sum(joint_distribution[ ,4])
+u_Conditional_v
+v_Conditional_u = joint_distribution[3, ] / sum(joint_distribution[3, ])
+v_Conditional_u
+
+# Save File
+res <-list(Joint_distribution=joint_distribution,
+           u_Marginal = u_Marginal,
+           v_Marginal = v_Marginal,
+           u_Conditional_v = u_Conditional_v,
+           v_Conditional_u = v_Conditional_u          )
+saveRDS(res, file = paste(dataPath,'result.rds',sep = '/'))
+```
+
+```{r}
+#Marginal Probability Additional Methods
+
+# using apply function
+u.marginal = apply(X = joint_distribution, MARGIN = 1, FUN = sum)
+u.marginal
+
+# using for loop
+u_marginal2 = c()
+for (i in 1:count_dist){
+  u.marginal = sum(joint_distribution[i, ])
+  u_marginal2 = c(u_marginal2, u.marginal)
+}
+u_marginal2
+
+```
+
